@@ -12,3 +12,4 @@ Output file will contain delta file at first.
 
 - GUI application will be created to allow users to identify target files to compare. 
 
+FILES FOR ORIGINAL PROJECT WILL NOT BE PROVIDED, BUT TEMPLATE WILL BE.
