@@ -50,18 +50,19 @@ import xlwings as xw
 
 
 #CREATE DF FOR PRIOR QT US MASTER
-prior_US_Master = 'files/2021_Q4_US_Master.xlsx'
-df_old_US_Master = pd.read_excel(prior_US_Master)
+# prior_US_Master = 'files/2022_Q_US_Master.xlsx'
+curr_US_Master = 'files/2022_Q1_US_Master.xlsx'
+df_curr_US_Master = pd.read_excel(curr_US_Master)
 
 #ARRAY VARIABLE TO STORE DATA FROM SOURCE FILE
 append_data = []
 
 
 #IDENTIFY THE DATA TO BE ADDED TO ARRAY
-df_old_US_Master = df_old_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE']]
+df_curr_US_Master = df_curr_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE']]
 
 #Append data to df
-append_data.append(df_old_US_Master)
+append_data.append(df_curr_US_Master)
 # print(append_data)
 
 #LOOK FOR PART NUMBERS THAT MATCH TO PRIOR MASTER AND PULL IN LIST PRICE 
