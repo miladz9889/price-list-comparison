@@ -131,6 +131,7 @@ dmypy.json
 
 # Files
 /[Ff]iles/
+/[Oo]utput/
 files/Vizient 2016 Price List.xlsx
 files/Sutter 2012 Price List.xlsx
 files/SSM 2017.xlsx
