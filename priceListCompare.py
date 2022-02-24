@@ -76,7 +76,6 @@ append_data = pd.concat(append_data)
 append_data.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", index=False)
 
 
-# print(df_old_US_Master)
 
 
 #CREATE DF FOR CURRENT QT US MASTER
