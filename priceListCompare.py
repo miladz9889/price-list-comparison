@@ -66,8 +66,9 @@ df_old_US_Master = df_old_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'M
 df_old_US_Master.rename(columns={'LIST_PRICE':'OLD_LIST_PRICE'}, inplace=TRUE)
 # print(df_old_US_Master)
 
-#Merge old list price to current US Master. This works like a vlookup pulling in based on PART_NUM and pulling in the OLD_LIST_PRICE
+#Merge old list price and comments to current US Master. This works like a vlookup pulling in based on PART_NUM and pulling in the OLD_LIST_PRICE
 df_output = pd.merge(df_curr_US_Master, df_old_US_Master[['PART_NUM', 'OLD_LIST_PRICE', 'Comments']], on='PART_NUM', how = 'left' )
+# df_output= df_output.mask(df_output == '')
 
 #add in new column 'delta' calculating difference between old list price and list price (current US Master price)
 df_output['DELTA'] = df_output.apply(lambda row: row.OLD_LIST_PRICE - row.LIST_PRICE, axis=1)
@@ -79,20 +80,18 @@ def status_df(df_output):
         return 'price list increased'
     elif(df_output['DELTA'] < 0):
         return 'price list decreased'
-    else: 
+    elif(df_output['DELTA'] == 0):
         return 'no change'
+
 
 df_output['STATUS'] = df_output.apply(status_df, axis=1)
 
-
-
-#look up comments in old master file and pull them into current US master
-# df_output['COMMENTS'] = 'blank'
-# df_output = pd.merge(df_curr_US_Master, df_old_US_Master[['PART_NUM', 'Comments']], on='PART_NUM', how='left')
+#apply 'new' status if old pricing is N/A
+df_output['STATUS'] = df_output['STATUS'].fillna('new')
 
 
 #save file to local hard drive
-df_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", index=False)
+df_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", na_rep = 'N/A', index=False)
 print('DONE')
 
 
