@@ -1,5 +1,6 @@
 from datetime import date
 from doctest import master
+from operator import index
 from pickle import TRUE
 from turtle import pos
 import pandas as pd
@@ -7,6 +8,8 @@ import numpy as np
 from pathlib import Path 
 from openpyxl import load_workbook, Workbook 
 import xlwings as xw
+import glob
+import os
 
 
 #-------------------------------------------PSEUDOCODE-------------------------------------------
@@ -92,7 +95,7 @@ df_output['STATUS'] = df_output['STATUS'].fillna('new')
 
 #save file to local hard drive
 df_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", na_rep = 'N/A', index=False)
-print('DONE')
+print('Qt Catalog Review Completed')
 
 
 #--------------------------------------------USE CASE 2---------------------------------------------------------------------
@@ -100,12 +103,54 @@ print('DONE')
 #Input:
 #Output:
 
-#CREATE DF THAT INCLUDES ALL GPO PRICE LIST 
+PATH = r'files\2021 Q4 Customer Price Lists'
+all_files = glob.glob(PATH + "/*.xlsx")
+
+# for loop to create a large dataframe from all the customer price lists in folder
+li = []
+for filename in all_files:
+    df = pd.read_excel(filename, index_col=None, header=0)
+    li.append(df)
 
 
 
+df_customer_price_lists = pd.concat(li, axis=0, ignore_index=True)
+print('Mass data frame for customer price lists have been created')
 
-df_output_customer =  pd.merge(df_curr_US_Master, df_old_US_Master[['PART_NUM', 'OLD_LIST_PRICE', 'Comments', 'Discountable']], on='PART_NUM', how = 'left' )
+df_customer_price_lists.rename(columns={'Product Number':'PART_NUM'}, inplace=TRUE)
+df_customer_price_lists.rename(columns={'Contract Price List':'Contract_Price_List'}, inplace=TRUE)
+
+df_customer_output = pd.merge(df_curr_US_Master,df_customer_price_lists[['PART_NUM', 'Price List Label', 'Contract_Price_List']], on='PART_NUM', how='left')
+
+
+#add in new column 'delta' calculating difference between old list price and list price (current US Master price)
+df_customer_output['DELTA'] = df_customer_output.apply(lambda row: row.Contract_Price_List - row.LIST_PRICE, axis=1)
+
+
+#add in new 'status' column. Applying 'no change' if delta is 0, 'price increased' if list price increased, 'price decreased' if delta is a negative, and 'new' if nan
+def priceListCompare_df(df_customer_output):
+    if(df_customer_output['DELTA'] > 0):
+        return 'Price is higher on Customer Price List'
+    elif((df_customer_output['DELTA'] < 0) | (df_customer_output['DELTA'] == 0)):
+        return 'Okay'
+    else:
+        return 'part number not on contract price list'
+
+
+
+df_customer_output['STATUS'] = df_customer_output.apply(priceListCompare_df, axis=1)
+
+#apply 'new' status if old pricing is N/A
+# df_customer_output['STATUS'] = df_customer_output['STATUS'].fillna('new')
+
+
+
+df_customer_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\2021Q4_Customer_Price_List.xlsx", index=False)
+print('Output is ready')
+
+#need to pull all price list from siebel to identify how df should be created from that
+
+
 
 #ADD COLUMNS FOR PRICE LIST OF EACH CUSTOMER PRICE BOOK 
 
