@@ -60,7 +60,7 @@ df_curr_US_Master = df_curr_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 
 
 old_US_Master = 'files/2021_Q4_US_MASTER.xlsx'
 df_old_US_Master = pd.read_excel(old_US_Master)
-df_old_US_Master = df_old_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE']]
+df_old_US_Master = df_old_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE', 'Comments']]
 
 df_old_US_Master.rename(columns={'LIST_PRICE':'OLD_LIST_PRICE'}, inplace=TRUE)
 # print(df_old_US_Master)
@@ -69,30 +69,23 @@ df_old_US_Master.rename(columns={'LIST_PRICE':'OLD_LIST_PRICE'}, inplace=TRUE)
 df_output = pd.merge(df_curr_US_Master, df_old_US_Master[['PART_NUM', 'OLD_LIST_PRICE']], on='PART_NUM', how = 'left' )
 print(df_output)
 
-#add in new column delta, status, comments on output file
-df_output['DELTA'], df_output['STATUS'], df_output['COMMENTS'] = [df_output.apply(lambda row: row.OLD_LIST_PRICE - row.LIST_PRICE, axis=1),'test','test2']
+#add in new column delta calculating difference between old list price and list price (current US Master price)
+df_output['DELTA'] = df_output.apply(lambda row: row.OLD_LIST_PRICE - row.LIST_PRICE, axis=1)
 
 
+#add in new status column. Applying 'no change' if delta is 0, 'price increased' if list price increased, 'price decreased' if delta is a negative, and 'new' if nan
+df_output['STATUS'] = 'status' 
+
+
+#look up comments in old master file and pull them into current US master
+df_output['COMMENTS'] = 'blank'
+df_output = pd.merge(df_curr_US_Master, df_old_US_Master[['PART_NUM', 'Comments']], on='PART_NUM', how='left')
 
 df_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", index=False)
-#ARRAY VARIABLE TO STORE DATA FROM SOURCE FILE
-# append_data = []
 
 
-#IDENTIFY THE DATA TO BE ADDED TO ARRAY
-
-# #Append data to data frame
-# append_data.append(df_output)
-# print(append_data)
-
-#LOOK FOR PART NUMBERS THAT MATCH TO PRIOR MASTER AND PULL IN LIST PRICE 
-#New column 'Old Price List', 'Delta' created
-#look up for each row in file against old us master
 
 
-#APPEND TO DATA
-
-#CALCULATE DELTA AND APPEND AS NEW COLUMN TO DF AS 'DELTA'
 
 
 #CONCAT DATA AND PASTE INTO NEW MASTER FILE 
