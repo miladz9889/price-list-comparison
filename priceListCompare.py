@@ -1,5 +1,6 @@
 from datetime import date
 from doctest import master
+from pickle import TRUE
 import pandas as pd
 import numpy as np
 from pathlib import Path 
@@ -48,26 +49,37 @@ import xlwings as xw
 #   New: Part number not found compared to last qt
 #   Deleted: Part number was found in obsolete file 
 
+# should see delta on NUSM307
 
 #CREATE DF FOR PRIOR QT US MASTER
-# prior_US_Master = 'files/2022_Q_US_Master.xlsx'
 curr_US_Master = 'files/2022_Q1_US_Master.xlsx'
 df_curr_US_Master = pd.read_excel(curr_US_Master)
+df_curr_US_Master = df_curr_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE']]
+
+old_US_Master = 'files/2021_Q4_US_MASTER.xlsx'
+df_old_US_Master = pd.read_excel(old_US_Master)
+df_old_US_Master = df_curr_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE']]
+
+df_old_US_Master.rename(columns={'LIST_PRICE':'OLD_LIST_PRICE'}, inplace=TRUE)
+
+df_output = pd.merge(df_curr_US_Master, df_old_US_Master, on='PART_NUM', how = 'left' )
+
+
 
 #ARRAY VARIABLE TO STORE DATA FROM SOURCE FILE
 append_data = []
 
 
 #IDENTIFY THE DATA TO BE ADDED TO ARRAY
-df_curr_US_Master = df_curr_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE']]
 
-#Append data to data frame
-append_data.append(df_curr_US_Master)
-# print(append_data)
+# #Append data to data frame
+append_data.append(df_output)
+print(append_data)
 
 #LOOK FOR PART NUMBERS THAT MATCH TO PRIOR MASTER AND PULL IN LIST PRICE 
 #New column 'Old Price List', 'Delta' created
 #look up for each row in file against old us master
+
 
 #APPEND TO DATA
 
