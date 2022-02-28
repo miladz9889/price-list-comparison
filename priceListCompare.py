@@ -61,14 +61,14 @@ df_curr_US_Master = df_curr_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 
 
 old_US_Master = 'files/2021_Q4_US_MASTER.xlsx'
 df_old_US_Master = pd.read_excel(old_US_Master)
-df_old_US_Master = df_old_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE', 'Comments']]
+df_old_US_Master = df_old_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE', 'Comments', 'Discountable']]
 
 df_old_US_Master.rename(columns={'LIST_PRICE':'OLD_LIST_PRICE'}, inplace=TRUE)
 # print(df_old_US_Master)
 
 #Merge old list price and comments to current US Master. This works like a vlookup pulling in based on PART_NUM and pulling in the OLD_LIST_PRICE
-df_output = pd.merge(df_curr_US_Master, df_old_US_Master[['PART_NUM', 'OLD_LIST_PRICE', 'Comments']], on='PART_NUM', how = 'left' )
-# df_output= df_output.mask(df_output == '')
+df_output = pd.merge(df_curr_US_Master, df_old_US_Master[['PART_NUM', 'OLD_LIST_PRICE', 'Comments', 'Discountable']], on='PART_NUM', how = 'left' )
+
 
 #add in new column 'delta' calculating difference between old list price and list price (current US Master price)
 df_output['DELTA'] = df_output.apply(lambda row: row.OLD_LIST_PRICE - row.LIST_PRICE, axis=1)
@@ -95,92 +95,25 @@ df_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price 
 print('DONE')
 
 
-
-#CONCAT DATA AND PASTE INTO NEW MASTER FILE 
-# append_data = pd.concat(append_data)
-# append_data.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", index=False)
-
-
-
-
-#CREATE DF FOR CURRENT QT US MASTER
-# curr_US_Master = 'files/2021_Q4_US_Master.xlsx'
-# wb = load_workbook(curr_US_Master)
-# ws = wb.active
-
-# column_a = ws['A']
-# print(column_a)
-
-# for cell in column_a:
-#     print(cell.value)
-# df_curr_US_Master = pd.read_excel(curr_US_Master)
-
-# wb = load_workbook(filename=curr_US_Master)
-
-
-
-#CREATE THE NEW WORKBOOK
-# master_wb = xw.Book()
-
-# for cells in curr_US_Master:
-#     wb = xw.Book(curr_US_Master)
-#     for sheet in wb.sheets:
-#         sheet.api.copy(After=master_wb.sheets[0].api)
-#         wb.close()
-
-# master_wb.sheets[0].delete()
-# master_wb.save(f'US_MASTER_ANALYSIS.xlsx')
-# if len(master_wb.app.books) == 1:
-#     master_wb.app.quit()
-# else:
-#     master_wb.close()
-
-# master_ws = master_wb.active
-# master_ws.title = 'US_MASTER_ANALYSIS'
-
-
-
-# values_excel_files = {}
-# for curr_US_Master in curr_US_Master:
-#     report_date = curr_US_Master.stem.replace("_Report", "")
-#     wb = load_workbook(filename=curr_US_Master)
-#     rng = wb["Sheet1"]["B2":"B19"]
-#     rng_values = []
-#     for cells in rng:
-#         for cell in cells:
-#             rng_values.append(cell.value)
-#     values_excel_files[report_date] = rng_values
-# print(values_excel_files)
-#COPY PART NUMBERS FROM CURRENT US MASTER INTO NEW FILE
-#PART NUMBER | DESCRIPTION | HIERARCHYY (MAG, AG, BU) | OLD PRICE LIST | NEW PRICE LIST | DELTA | STATUS 
-
-
-#IF PART NUMBER NOT FOUND, SET AS NEW STAUS AND PULL IN DATA FROM CURRENT US MASTER INTO SHEET
-
-#IF PART NUMBER IS FOUND, POPULATE OLD PRICE, NEW PRICE LIST
-#CALCULATE DELTA
-#SET STATUS BASED ON DEFINITION
-
-
-
-#
-
-
-#
-
-
-#
-
-# print(df_old_US_Master)
-
-#
-
 #--------------------------------------------USE CASE 2---------------------------------------------------------------------
 #Summary:
 #Input:
 #Output:
 
-#CREATE DF FOR ALL CUSTOMER PRICE BOOKS
+#CREATE DF THAT INCLUDES ALL GPO PRICE LIST 
+
+
+
+
+df_output_customer =  pd.merge(df_curr_US_Master, df_old_US_Master[['PART_NUM', 'OLD_LIST_PRICE', 'Comments', 'Discountable']], on='PART_NUM', how = 'left' )
+
+#ADD COLUMNS FOR PRICE LIST OF EACH CUSTOMER PRICE BOOK 
+
+#DELTA BETWEEN EACH PRICE LIST - US MASTER 
+#IF CUSTOMER PRICE LIST IS HIGHER THAN US MASTER SHOW AS INCORRECT PRICING
+
+
+#COMPARE CUSTOMER PRICE LISTS TO OLD CUSTOMER PRICE LIST 
 
 
 #COMPARE OLD MASTER TO CURR MASTER
