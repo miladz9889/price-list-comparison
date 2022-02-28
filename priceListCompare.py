@@ -55,26 +55,35 @@ import xlwings as xw
 curr_US_Master = 'files/2022_Q1_US_Master.xlsx'
 df_curr_US_Master = pd.read_excel(curr_US_Master)
 df_curr_US_Master = df_curr_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE']]
+# print(df_curr_US_Master)
+
 
 old_US_Master = 'files/2021_Q4_US_MASTER.xlsx'
 df_old_US_Master = pd.read_excel(old_US_Master)
-df_old_US_Master = df_curr_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE']]
+df_old_US_Master = df_old_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE']]
 
 df_old_US_Master.rename(columns={'LIST_PRICE':'OLD_LIST_PRICE'}, inplace=TRUE)
+# print(df_old_US_Master)
 
-df_output = pd.merge(df_curr_US_Master, df_old_US_Master, on='PART_NUM', how = 'left' )
+#Merge old list price to current US Master. This works like a vlookup pulling in based on PART_NUM and pulling in the OLD_LIST_PRICE
+df_output = pd.merge(df_curr_US_Master, df_old_US_Master[['PART_NUM', 'OLD_LIST_PRICE']], on='PART_NUM', how = 'left' )
+print(df_output)
+
+#add in new column delta, status, comments on output file
+df_output['DELTA'], df_output['STATUS'], df_output['COMMENTS'] = [df_output.apply(lambda row: row.OLD_LIST_PRICE - row.LIST_PRICE, axis=1),'test','test2']
 
 
 
+df_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", index=False)
 #ARRAY VARIABLE TO STORE DATA FROM SOURCE FILE
-append_data = []
+# append_data = []
 
 
 #IDENTIFY THE DATA TO BE ADDED TO ARRAY
 
 # #Append data to data frame
-append_data.append(df_output)
-print(append_data)
+# append_data.append(df_output)
+# print(append_data)
 
 #LOOK FOR PART NUMBERS THAT MATCH TO PRIOR MASTER AND PULL IN LIST PRICE 
 #New column 'Old Price List', 'Delta' created
@@ -87,8 +96,8 @@ print(append_data)
 
 
 #CONCAT DATA AND PASTE INTO NEW MASTER FILE 
-append_data = pd.concat(append_data)
-append_data.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", index=False)
+# append_data = pd.concat(append_data)
+# append_data.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", index=False)
 
 
 
