@@ -99,9 +99,7 @@ print('Qt Catalog Review Completed')
 
 
 #--------------------------------------------USE CASE 2---------------------------------------------------------------------
-#Summary:
-#Input:
-#Output:
+
 
 PATH = r'files\2021 Q4 Customer Price Lists'
 all_files = glob.glob(PATH + "/*.xlsx")
@@ -150,19 +148,5 @@ print('Output is ready')
 
 #need to pull all price list from siebel to identify how df should be created from that
 
-
-
-#ADD COLUMNS FOR PRICE LIST OF EACH CUSTOMER PRICE BOOK 
-
-#DELTA BETWEEN EACH PRICE LIST - US MASTER 
-#IF CUSTOMER PRICE LIST IS HIGHER THAN US MASTER SHOW AS INCORRECT PRICING
-
-
-#COMPARE CUSTOMER PRICE LISTS TO OLD CUSTOMER PRICE LIST 
-
-
-#COMPARE OLD MASTER TO CURR MASTER
-
-#SAVE RESULTS TO A NEW EXCEL FILE 
 
 
