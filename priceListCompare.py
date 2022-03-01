@@ -95,6 +95,12 @@ df_output['STATUS'] = df_output.apply(status_df, axis=1)
 #apply 'new' status if old pricing is N/A
 df_output['STATUS'] = df_output['STATUS'].fillna('new')
 
+#remove obsolete items from obsolete tab
+
+#add FDA approved column based on questionnaire
+
+
+
 
 #save file to local hard drive
 df_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", na_rep = 'N/A', index=False)
