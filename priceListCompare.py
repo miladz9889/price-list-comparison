@@ -53,7 +53,6 @@ import os
 #   New: Part number not found compared to last qt
 #   Deleted: Part number was found in obsolete file 
 
-# should see delta on NUSM307
 
 #CREATE DF FOR PRIOR QT US MASTER
 curr_US_Master = 'files/2022_Q1_US_Master.xlsx'
@@ -108,18 +107,18 @@ all_files = glob.glob(PATH + "/*.xlsx")
 li = []
 for filename in all_files:
     df = pd.read_excel(filename, index_col=None, header=0)
-    df['filename'] = filename
+    df['Price Book Name'] = os.path.basename(filename)
     li.append(df)
 
-print(df)
+
 
 df_customer_price_lists = pd.concat(li, axis=0, ignore_index=True)
 print('Mass data frame for customer price lists have been created')
 
-df_customer_price_lists.rename(columns={'Product Number':'PART_NUM'}, inplace=TRUE)
-df_customer_price_lists.rename(columns={'Contract Price List':'Contract_Price_List'}, inplace=TRUE)
+df_customer_price_lists.rename(columns={'Code':'PART_NUM'}, inplace=TRUE)
+df_customer_price_lists.rename(columns={'List Price':'Contract_Price_List'}, inplace=TRUE)
 
-df_customer_output = pd.merge(df_curr_US_Master,df_customer_price_lists[['PART_NUM', 'Price List Label', 'Contract_Price_List']], on='PART_NUM', how='left')
+df_customer_output = pd.merge(df_curr_US_Master,df_customer_price_lists[['PART_NUM', 'Price Book Name', 'Contract_Price_List']], on='PART_NUM', how='left')
 
 
 #add in new column 'delta' calculating difference between old list price and list price (current US Master price)
@@ -144,10 +143,10 @@ df_customer_output['STATUS'] = df_customer_output.apply(priceListCompare_df, axi
 
 
 
-df_customer_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\2021Q4_Customer_Price_List.xlsx", index=False)
+df_customer_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\2022Q1_Customer_Price_List.xlsx", index=False)
 print('Output is ready')
 
-#need to pull all price list from siebel to identify how df should be created from that
+
 
 
 
