@@ -134,7 +134,10 @@ df_customer_output = pd.merge(df_curr_US_Master,df_customer_price_lists[['PART_N
 df_customer_output['DELTA'] = df_customer_output.apply(lambda row: row.Contract_Price_List - row.LIST_PRICE, axis=1)
 
 
-#add in new 'status' column. Applying 'no change' if delta is 0, 'price increased' if list price increased, 'price decreased' if delta is a negative, and 'new' if nan
+#method for applying status based on customer price list compared to US Master price list
+#If delta is greater than 0 set status to 'price is higher on customer price list'
+#else if delta is less than 0 OR delta is equal to 0, set status to 'okay' since pricing can stay the same or be lower than market price
+#otherwise, part number is not on contract price list and set status to 'part number not on contract price list'
 def priceListCompare_df(df_customer_output):
     if(df_customer_output['DELTA'] > 0):
         return 'Price is higher on Customer Price List'
@@ -144,14 +147,10 @@ def priceListCompare_df(df_customer_output):
         return 'part number not on contract price list'
 
 
-
+#apply priceListCompare method to customer output file
 df_customer_output['STATUS'] = df_customer_output.apply(priceListCompare_df, axis=1)
 
-#apply 'new' status if old pricing is N/A
-# df_customer_output['STATUS'] = df_customer_output['STATUS'].fillna('new')
-
-
-
+#export file
 df_customer_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\2022Q1_Customer_Price_List.xlsx", index=False)
 toc_use_case_2_b = time.perf_counter()
 print(f'Output Completed in {toc_use_case_2_b - tic_use_case_2_b:0.4f} seconds\nTotal Time for Price List Comparison = {toc_use_case_2_b - tic_use_case_2_a:0.4f} seconds \nTotal Runtime = {toc_use_case_2_b - tic_use_case_1:0.4f} seconds')
