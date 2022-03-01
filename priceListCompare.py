@@ -10,6 +10,7 @@ from openpyxl import load_workbook, Workbook
 import xlwings as xw
 import glob
 import os
+import time
 
 
 #-------------------------------------------PSEUDOCODE-------------------------------------------
@@ -54,6 +55,10 @@ import os
 #   Deleted: Part number was found in obsolete file 
 
 
+#timer setup to track performance
+
+tic_use_case_1 = time.perf_counter()
+
 #CREATE DF FOR PRIOR QT US MASTER
 curr_US_Master = 'files/2022_Q1_US_Master.xlsx'
 df_curr_US_Master = pd.read_excel(curr_US_Master)
@@ -94,12 +99,13 @@ df_output['STATUS'] = df_output['STATUS'].fillna('new')
 
 #save file to local hard drive
 df_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\US_MASTER_ANALYSIS.xlsx", na_rep = 'N/A', index=False)
-print('Qt Catalog Review Completed')
+toc_use_case_1 = time.perf_counter()
+print(f'Qt Catalog Review Completed in {toc_use_case_1 - tic_use_case_1:0.4f} seconds')
 
 
 #--------------------------------------------USE CASE 2---------------------------------------------------------------------
 
-
+tic_use_case_2_a = time.perf_counter()
 PATH = r'files\2022 Q1 Customer Price Lists'
 all_files = glob.glob(PATH + "/*.xlsx")
 
@@ -113,7 +119,10 @@ for filename in all_files:
 
 
 df_customer_price_lists = pd.concat(li, axis=0, ignore_index=True)
-print('Mass data frame for customer price lists have been created')
+toc_use_case_2_a = time.perf_counter()
+print(f'Mass data frame for customer price lists have been created in {toc_use_case_2_a - tic_use_case_2_a:0.4f} seconds')
+
+tic_use_case_2_b = time.perf_counter()
 
 df_customer_price_lists.rename(columns={'Code':'PART_NUM'}, inplace=TRUE)
 df_customer_price_lists.rename(columns={'List Price':'Contract_Price_List'}, inplace=TRUE)
@@ -144,7 +153,8 @@ df_customer_output['STATUS'] = df_customer_output.apply(priceListCompare_df, axi
 
 
 df_customer_output.to_excel(r"C:\Users\milad\Dropbox\Documents\Development\Philips\Price List Comparison\price-list-comparison\output\2022Q1_Customer_Price_List.xlsx", index=False)
-print('Output is ready')
+toc_use_case_2_b = time.perf_counter()
+print(f'Output Completed in {toc_use_case_2_b - tic_use_case_2_b:0.4f} seconds\nTotal Time for Price List Comparison = {toc_use_case_2_b - tic_use_case_2_a:0.4f} seconds \nTotal Runtime = {toc_use_case_2_b - tic_use_case_1:0.4f} seconds')
 
 
 
