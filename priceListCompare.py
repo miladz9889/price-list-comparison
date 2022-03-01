@@ -101,16 +101,17 @@ print('Qt Catalog Review Completed')
 #--------------------------------------------USE CASE 2---------------------------------------------------------------------
 
 
-PATH = r'files\2021 Q4 Customer Price Lists'
+PATH = r'files\2022 Q1 Customer Price Lists'
 all_files = glob.glob(PATH + "/*.xlsx")
 
 # for loop to create a large dataframe from all the customer price lists in folder
 li = []
 for filename in all_files:
     df = pd.read_excel(filename, index_col=None, header=0)
+    df['filename'] = filename
     li.append(df)
 
-
+print(df)
 
 df_customer_price_lists = pd.concat(li, axis=0, ignore_index=True)
 print('Mass data frame for customer price lists have been created')
