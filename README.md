@@ -18,6 +18,7 @@ Specific templates will be adhered to for this project.
 - GUI application will be created to allow users to upload excel documents required for script to run
     - Will include validation errors for user error feedback
     - Will run by an executable 
+    - Will use PyQt5 
 
 
 FILES FOR ORIGINAL PROJECT WILL NOT BE PROVIDED, BUT TEMPLATE WILL BE OUTSIDE PARTY WOULD LIKE TO USE THIS PROGRAM

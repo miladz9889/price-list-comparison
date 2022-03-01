@@ -56,7 +56,6 @@ import time
 
 
 #timer setup to track performance
-
 tic_use_case_1 = time.perf_counter()
 
 #CREATE DF FOR PRIOR QT US MASTER
