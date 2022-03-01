@@ -104,6 +104,9 @@ print(f'Qt Catalog Review Completed in {toc_use_case_1 - tic_use_case_1:0.4f} se
 
 
 #--------------------------------------------USE CASE 2---------------------------------------------------------------------
+#Summary:Compare customer specific price lists to current market price to identify any issues with backend job done in legacy system
+#Input:Current qt pricing AND all customer price lists 
+#Output:All part numbers pricing delta, status (Okay, Price list higher on customer price list, part not on contract)
 
 tic_use_case_2_a = time.perf_counter()
 PATH = r'files\2022 Q1 Customer Price Lists'
