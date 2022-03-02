@@ -113,6 +113,11 @@ print(f'Qt Catalog Review Completed in {toc_use_case_1 - tic_use_case_1:0.4f} se
 #Input:Current qt pricing AND all customer price lists 
 #Output:All part numbers pricing delta, status (Okay, Price list higher on customer price list, part not on contract)
 
+# New scenario: 
+# if all price list in price books match, okay, but if one is different/higher apply a "potential issue"
+# Add in logic to review against prior quarter price list 
+#
+
 tic_use_case_2_a = time.perf_counter()
 PATH = r'files\2022 Q1 Customer Price Lists'
 all_files = glob.glob(PATH + "/*.xlsx")
