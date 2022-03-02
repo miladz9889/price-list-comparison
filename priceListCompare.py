@@ -65,9 +65,10 @@ df_curr_US_Master = df_curr_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 
 # print(df_curr_US_Master)
 
 
+
 old_US_Master = 'files/2021_Q4_US_MASTER.xlsx'
 df_old_US_Master = pd.read_excel(old_US_Master)
-df_old_US_Master = df_old_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'LIST_PRICE', 'Comments', 'Discountable']]
+df_old_US_Master = df_old_US_Master[['PART_NUM','DESCRIPTION', 'TYPE', 'MAG', 'MAG_CODE',	'AG',	'AG_CODE',	'BUSINESS_UNIT', 'BUSINESS', 'BS_CODE', 'BU_CODE', 'ITEM_CAT_GRP', 'LIST_PRICE', 'Comments', 'Discountable']]
 
 df_old_US_Master.rename(columns={'LIST_PRICE':'OLD_LIST_PRICE'}, inplace=TRUE)
 # print(df_old_US_Master)
